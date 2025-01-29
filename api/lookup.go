@@ -4,8 +4,8 @@ import (
 	"encoding/xml"
 	"net/http"
 
+	"github.com/Shofiul735/trumail/verifier"
 	"github.com/labstack/echo"
-	"github.com/sdwolfe32/trumail/verifier"
 )
 
 // Lookup contains all output data for an email verification Lookup

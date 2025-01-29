@@ -1,16 +1,17 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"strings"
 
-	"github.com/entrik/httpclient"
+	"github.com/Shofiul735/trumail/api"
+	"github.com/Shofiul735/trumail/verifier"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/sdwolfe32/trumail/api"
-	"github.com/sdwolfe32/trumail/verifier"
 )
 
 var (
@@ -39,9 +40,23 @@ func main() {
 
 // RetrievePTR attempts to retrieve the PTR record for the IP
 // address retrieved via an API call on api.ipify.org
+func GetString(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
+}
+
 func retrievePTR() string {
 	// Request the IP from ipify
-	ip, err := httpclient.GetString("https://api.ipify.org/")
+	ip, err := GetString("https://api.ipify.org/")
 	if err != nil {
 		log.Fatal("Failed to retrieve public IP")
 	}
